@@ -8,6 +8,7 @@ import {
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { DetailPeople } from "./pages/DetailPeople.jsx";
+import DetailPlanet from "./pages/DetailPlanet.jsx";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -23,6 +24,7 @@ export const router = createBrowserRouter(
         {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
         <Route path= "/" element={<Home />} />
         <Route path="/personaje/:uid" element={ <DetailPeople />} />
+        <Route path="/planet/:uid" element={ <DetailPlanet />} />
       </Route>
     )
 );
