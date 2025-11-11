@@ -1,69 +1,63 @@
+import { useEffect } from "react";
 import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import CardPeople from "../components/CardPeople.jsx";
 import CardPlanet from "../components/CardPlanet.jsx";
-import { useEffect, useState } from "react";
+
 
 export const Home = () => {
-	const { store, dispatch } = useGlobalReducer();
-	const [characters, setCharacters] = useState([]);
-	const [planets, setPlanets] = useState([])
 
-	const getCharacters = async () => {
-		try {
-			const response = await fetch("https://www.swapi.tech/api/people/");
-			if (!response.ok) {
-				throw new Error(`There was an error getting the characters: ${response.status}`);
-			}
+	const { store, dispatch } = useGlobalReducer()
 
-			const data = await response.json();
-			console.log(data.results);
-			setCharacters(data.results);
+	async function character() {
 
-		} catch (error) {
-			console.error("There was an error getting the characters", error);
-		}
-	};
-	const getPlanets = async () => {
-		try {
-			const response = await fetch("https://www.swapi.tech/api/planets/");
-			if (!response.ok) {
-				throw new Error(`There was an error getting the characters: ${response.status}`);
-			}
+		const response = await fetch("https://www.swapi.tech/api/people/")
 
-			const data = await response.json();
-			console.log(data.results);
-			setPlanets(data.results);
+		const data = await response.json()
+		const personajesBasicos = data.results;
+		dispatch({
+			type: "get_personajes",
+			payload: { personaje: personajesBasicos }
+		})
 
-		} catch (error) {
-			console.error("There was an error getting the characters", error);
-		}
-	};
+
+	}
+	async function planet() {
+		const response = await fetch("https://www.swapi.tech/api/planets/")
+		const data = await response.json()
+		const basicplanets = data.results;
+		dispatch({
+			type: 'get_planets',
+			payload: {planets: basicplanets}
+		})
+		
+	}
+
+
 
 	useEffect(() => {
-		getCharacters();
-		getPlanets();
-	}, []);
-
+		character()
+		planet()
+	}, [])
 
 	return (
-		<div>
+		<div className="mx-5 mt-5">
 			<h1 className="text-danger">Characters</h1>
-			<div className="text-center mt-5 d-flex overflow-auto">
-				{characters.map((character, index) => (
-					<div key={index} className="flex-shrink-0 me-3">
-						<CardPeople information={character} />
-					</div>
-				))}
+			<div className='d-flex flex-nowrap overflow-auto'>
+				{store.character.map((value, index) => {
+					return (
+						<CardPeople key={index} people={value} />
+					)
+				})}
 			</div>
-			<h1 className="text-danger mt-4">Planets</h1>
-			<div className="text-center mt-5 d-flex overflow-auto">
-				{planets.map((planet, index) => (
-					<div key={index} className="flex-shrink-0 me-3">
-						<CardPlanet information={planet} />
-					</div>
-				))}
+			<h1 className="text-danger mt-3">Planets</h1>
+			<div className='d-flex flex-nowrap overflow-auto'>
+				{store.planet.map((value, index) => {
+					return (
+						<CardPlanet key={index} planet={value} />
+					)
+				})}
 			</div>
 		</div>
 	);
-};
+}; 
