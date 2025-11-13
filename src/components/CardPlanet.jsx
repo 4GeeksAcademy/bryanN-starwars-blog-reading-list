@@ -11,10 +11,21 @@ const CardPlanet = ({ planet }) => {
         className="card-img-top"
         alt={planet.name}
       />
-      <div className="card-body">
-        <h5 className="card-title">Name: {planet.name}</h5>
-        <Link to={`/planet/${planet.uid}`} className="btn btn-primary">Details</Link>
-        <button className="btn btn-outline-warning ms-2">Fav</button>
+      <h5 className="card-title">Name: {planet.name}</h5>
+      <div className="card-body mt-auto row">
+        <Link to={`/planet/${planet.uid}`} className="btn btn-primary col">Details</Link>
+        <button
+          className={`btn ms-2 ${store.favorites.some(f => f.uid === planet.uid)
+              ? "btn-warning"
+              : "btn-outline-warning"
+            }`}
+          onClick={() => dispatch({
+            type: "toggle_favorite",
+            payload: planet
+          })}
+        >
+          Fav
+        </button>
       </div>
     </div>
   );
